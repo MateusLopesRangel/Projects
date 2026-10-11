@@ -40,7 +40,8 @@
       muted: token("--muted"),
       line: token("--line"),
       surface: token("--surface"),
-      mono: token("--font-mono")
+      mono: token("--font-mono"),
+      body: token("--font-body")
     };
   }
   function speedColor(P, v) {
@@ -217,44 +218,131 @@
   /* ---------- Project page: speed profile chart ---------- */
   var chart = document.querySelector("[data-speed-profile]");
   if (chart) {
+    var sEnd = T.s[n - 1];
+    var vLo = 0, vHi = 50; // speeds stay between 14 and 45 km/h
+    var iSlow = T.v.indexOf(vMin), iFast = T.v.indexOf(vMax);
+    var hover = -1, geo = null;
+    var tip = document.createElement("div");
+    tip.className = "chart-tip";
+    tip.hidden = true;
+    chart.parentNode.appendChild(tip);
+
     function drawChart() {
       var P = palette();
       var g = setupCanvas(chart);
       var c = g.ctx;
-      var padL = 46, padR = 14, padT = 14, padB = 34;
+      var narrow = g.w < 520;
+      var padL = narrow ? 58 : 72, padR = narrow ? 16 : 28, padT = 30, padB = 62;
       var W = g.w - padL - padR, H = g.h - padT - padB;
-      var sMax = 820, vTop = 50;
-      var X = function (s) { return padL + (s / sMax) * W; };
-      var Y = function (v) { return padT + (1 - v / vTop) * H; };
+      var X = function (s) { return padL + (s / sEnd) * W; };
+      var Y = function (v) { return padT + (1 - (v - vLo) / (vHi - vLo)) * H; };
+      geo = { X: X, Y: Y, padL: padL, padT: padT, W: W, H: H, w: g.w };
       c.clearRect(0, 0, g.w, g.h);
-      c.font = "11px " + P.mono;
+
+      // Horizontal grid and y tick labels
+      c.font = "12px " + P.mono;
       c.fillStyle = P.muted;
       c.strokeStyle = P.line;
       c.lineWidth = 1;
-      // grid + y labels
       c.textAlign = "right"; c.textBaseline = "middle";
-      for (var v = 0; v <= vTop; v += 10) {
-        c.beginPath(); c.moveTo(padL, Y(v)); c.lineTo(padL + W, Y(v)); c.stroke();
-        c.fillText(String(v), padL - 8, Y(v));
+      for (var v = vLo; v <= vHi; v += 10) {
+        var y = Math.round(Y(v)) + 0.5;
+        c.beginPath(); c.moveTo(padL, y); c.lineTo(padL + W, y); c.stroke();
+        c.fillText(String(v), padL - 12, y);
       }
-      // x labels
+      // Baseline, x ticks and labels
+      var yBase = Math.round(Y(vLo)) + 0.5;
+      c.strokeStyle = P.muted;
+      c.beginPath(); c.moveTo(padL, yBase); c.lineTo(padL + W, yBase); c.stroke();
       c.textAlign = "center"; c.textBaseline = "top";
-      var step = W < 420 ? 200 : 100;
-      for (var s = 0; s <= sMax; s += step) c.fillText(String(s), X(s), padT + H + 8);
-      c.textAlign = "left"; c.textBaseline = "top";
-      c.fillText("km/h", 4, 0);
-      c.textAlign = "right"; c.textBaseline = "bottom";
-      c.fillText("distance [m]", padL + W, g.h);
-      // speed line colored by speed
-      c.lineWidth = 2.2; c.lineCap = "round";
+      var step = narrow ? 200 : 100;
+      for (var s = 0; s <= sEnd; s += step) {
+        var x = Math.round(X(s)) + 0.5;
+        c.beginPath(); c.moveTo(x, yBase); c.lineTo(x, yBase + 5); c.stroke();
+        c.fillText(String(s), x, yBase + 10);
+      }
+      // Axis titles, kept clear of the tick labels
+      c.font = "600 13px " + P.body;
+      c.fillStyle = P.muted;
+      c.textAlign = "center"; c.textBaseline = "bottom";
+      c.fillText("Distance along the lap [m]", padL + W / 2, g.h - 10);
+      c.save();
+      c.translate(narrow ? 14 : 20, padT + H / 2);
+      c.rotate(-Math.PI / 2);
+      c.textBaseline = "top";
+      c.fillText("Speed [km/h]", 0, 0);
+      c.restore();
+
+      // Speed line, colored with the same scale as the home page track map
+      c.lineWidth = 2; c.lineCap = "round"; c.lineJoin = "round";
       for (var i = 1; i < n; i++) {
         c.strokeStyle = speedColor(P, (T.v[i] + T.v[i - 1]) / 2);
         c.beginPath();
-        c.moveTo(X(Math.min(T.s[i - 1], sMax)), Y(T.v[i - 1]));
-        c.lineTo(X(Math.min(T.s[i], sMax)), Y(T.v[i]));
+        c.moveTo(X(T.s[i - 1]), Y(T.v[i - 1]));
+        c.lineTo(X(T.s[i]), Y(T.v[i]));
         c.stroke();
       }
+
+      // Direct labels on the two extremes only
+      function mark(k, text, above) {
+        var px = X(T.s[k]), py = Y(T.v[k]);
+        c.beginPath(); c.arc(px, py, 4.5, 0, Math.PI * 2);
+        c.fillStyle = speedColor(P, T.v[k]); c.fill();
+        c.lineWidth = 2; c.strokeStyle = P.surface; c.stroke();
+        c.font = "12px " + P.mono;
+        c.textBaseline = "top"; c.textAlign = "left";
+        var tw = c.measureText(text).width;
+        var tx = Math.min(Math.max(px - tw / 2, padL), padL + W - tw);
+        var ty = above ? py - 9 - 13 : py + 9;
+        c.fillStyle = P.surface; // keeps gridlines from striking through the label
+        c.fillRect(tx - 4, ty - 2, tw + 8, 17);
+        c.fillStyle = P.ink;
+        c.fillText(text, tx, ty);
+      }
+      mark(iFast, "max " + vMax.toFixed(1) + " km/h", true);
+      mark(iSlow, "min " + vMin.toFixed(1) + " km/h", false);
+
+      // Hover crosshair
+      if (hover >= 0) {
+        var hx = X(T.s[hover]), hy = Y(T.v[hover]);
+        c.strokeStyle = P.muted; c.lineWidth = 1; c.setLineDash([3, 3]);
+        c.beginPath(); c.moveTo(Math.round(hx) + 0.5, padT); c.lineTo(Math.round(hx) + 0.5, yBase); c.stroke();
+        c.setLineDash([]);
+        c.beginPath(); c.arc(hx, hy, 5, 0, Math.PI * 2);
+        c.fillStyle = speedColor(P, T.v[hover]); c.fill();
+        c.lineWidth = 2; c.strokeStyle = P.surface; c.stroke();
+      }
     }
+
+    function nearest(s) {
+      var lo = 0, hi = n - 1;
+      while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (T.s[mid] <= s) lo = mid; else hi = mid; }
+      return (s - T.s[lo] < T.s[hi] - s) ? lo : hi;
+    }
+    function onMove(e) {
+      if (!geo) return;
+      var r = chart.getBoundingClientRect();
+      var mx = e.clientX - r.left;
+      if (mx < geo.padL - 8 || mx > geo.padL + geo.W + 8) { onLeave(); return; }
+      var s = Math.min(Math.max((mx - geo.padL) / geo.W * sEnd, 0), sEnd);
+      hover = nearest(s);
+      drawChart();
+      tip.innerHTML = Math.round(T.s[hover]) + " m<br><b>" + T.v[hover].toFixed(1) + "</b> <span>km/h</span>";
+      tip.hidden = false;
+      var hx = geo.X(T.s[hover]), hy = geo.Y(T.v[hover]);
+      var tw = tip.offsetWidth, th = tip.offsetHeight;
+      var left = hx + 14 + tw > geo.w ? hx - 14 - tw : hx + 14;
+      var top = Math.max(4, hy - th - 10);
+      tip.style.transform = "translate(" + Math.round(left) + "px," + Math.round(top) + "px)";
+    }
+    function onLeave() {
+      if (hover < 0) return;
+      hover = -1; tip.hidden = true; drawChart();
+    }
+    chart.addEventListener("pointermove", onMove);
+    chart.addEventListener("pointerdown", onMove);
+    chart.addEventListener("pointerleave", onLeave);
+
     drawChart();
     if ("ResizeObserver" in window) new ResizeObserver(drawChart).observe(chart);
     onThemeChange(drawChart);

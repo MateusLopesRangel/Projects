@@ -107,7 +107,6 @@ p { margin: 0; }
 }
 .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 66px; }
 .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-display); font-stretch: 115%; font-weight: 700; letter-spacing: 0.02em; }
-.brand svg { width: 28px; height: 28px; color: var(--accent); flex: none; }
 .nav-links { display: flex; gap: 22px; font-size: 0.98rem; }
 .nav-links a { text-decoration: none; color: var(--muted); padding-block: 6px; border-bottom: 2px solid transparent; transition: color 150ms ease, border-color 150ms ease; }
 .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
@@ -246,7 +245,7 @@ p { margin: 0; }
 .pillar-section { padding-block: 56px; display: grid; gap: 26px; border-top: 1px solid var(--line); scroll-margin-top: 80px; }
 .pillar-head { display: grid; gap: 10px; }
 .pillar-head .label { color: var(--accent); }
-.prose { display: grid; gap: 14px; max-width: 68ch; }
+.prose { display: grid; gap: 14px; }
 .prose p { color: var(--ink); }
 
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
@@ -260,8 +259,10 @@ p { margin: 0; }
 figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
 figure .frame { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
 figcaption { font-size: 0.9rem; color: var(--muted); line-height: 1.45; }
-.chart-box { position: relative; height: 230px; }
-.chart-box canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.chart-box { position: relative; height: clamp(280px, 34vw, 360px); }
+.chart-box canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; }
+.chart-tip { position: absolute; top: 0; left: 0; pointer-events: none; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); box-shadow: var(--shadow); font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.35; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.chart-tip span { color: var(--muted); }
 .diagram svg { width: 100%; height: auto; display: block; }
 
 .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
@@ -278,7 +279,7 @@ details.tech summary { cursor: pointer; padding: 16px 20px; font-weight: 600; fo
 details.tech summary::-webkit-details-marker { display: none; }
 details.tech summary::after { content: "+"; font-family: var(--font-mono); font-weight: 400; color: var(--accent); font-size: 1.2rem; transition: transform 160ms ease; }
 details.tech[open] summary::after { transform: rotate(45deg); }
-details.tech .body { padding: 0 20px 20px; display: grid; gap: 12px; max-width: 74ch; color: var(--ink); }
+details.tech .body { padding: 0 20px 20px; display: grid; gap: 12px; color: var(--ink); }
 details.tech .body ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
 .formula { font-family: var(--font-mono); font-size: 0.92rem; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; overflow-x: auto; white-space: nowrap; }
 
@@ -286,7 +287,8 @@ details.tech .body ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px;
 .method li { font-family: var(--font-mono); font-size: 0.8rem; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
 .method li.sep { border: 0; background: none; padding: 0; color: var(--accent); }
 
-.callout { border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; color: var(--ink); max-width: 68ch; }
+.callout { border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; color: var(--ink); font-size: var(--step-1); line-height: 1.5; }
+.tl-item h3 + p { margin-top: 6px; color: var(--muted); }
 
 /* About */
 .timeline { display: grid; gap: 0; border-top: 1px solid var(--line); }
