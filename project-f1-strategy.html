@@ -30,12 +30,12 @@
     <section class="wrap p-banner">
       <p class="label">Project detail · Personal project</p>
       <h1>F1 Race Strategy from Telemetry</h1>
-      <p class="lead">At the 2026 Italian Grand Prix, Kimi Antonelli pitted under the Virtual Safety Car on lap 28, came out on new mediums and passed his Mercedes teammate George Russell on lap 50 to win. I am building a counterfactual race model in Python to answer one question: if Russell had stopped too, would he have won?</p>
+      <p class="lead">At the 2026 Italian Grand Prix, Kimi Antonelli pitted under the Virtual Safety Car on lap 28, came out on new mediums and passed his Mercedes teammate George Russell on lap 50 to win. I built a counterfactual race model in Python to answer one question: if Russell had stopped too, would he have won?</p>
       <dl class="facts">
         <div><dt>Race</dt><dd>Italian GP 2026, Monza</dd></div>
         <div><dt>Data</dt><dd>FastF1 timing and telemetry</dd></div>
-        <div><dt>Output</dt><dd>PDF report and LinkedIn series</dd></div>
-        <div><dt>Status</dt><dd>In progress</dd></div>
+        <div><dt>Output</dt><dd>Race simulation and LinkedIn post</dd></div>
+        <div><dt>Status</dt><dd>Completed, Oct 2026</dd></div>
       </dl>
     </section>
 
@@ -54,8 +54,8 @@
           <p>Python, FastF1, pandas, NumPy, Matplotlib, Streamlit (my own app to explore laps, gaps and channels)</p>
         </div>
         <div>
-          <span class="label">Findings so far</span>
-          <p>Russell had no new mediums on lap 28; the set was used in Q1. VSC stop loss measured at about 13.7 s. Overtaking rule calibrated to reproduce Antonelli's real race. Verdict pending.</p>
+          <span class="label">Result</span>
+          <p>Russell wins in 69 of 105 scenarios, as long as he is no more than about 0.18 s per lap slower than Antonelli on the same tyre. He had no new mediums left on lap 28; the last set was opened in Q1. Verdict: conditional accept.</p>
         </div>
       </div>
       <ol class="method" aria-label="Method">
@@ -123,10 +123,12 @@
           </div>
         </details>
         <details class="tech">
-          <summary>Provisional answer and rejection criterion</summary>
+          <summary>Result and verdict</summary>
           <div class="body">
-            <p>A first estimate says yes: about 0.8 s per lap of tyre advantage over 24 laps is roughly 19 s, against about 13.7 s lost in the stop, a margin near 5 s.</p>
-            <p>I reject the hypothesis if Russell finishes behind any car in the central scenario. The final answer will be a range ("Russell wins in X of Y plausible scenarios") instead of a yes or no.</p>
+            <p>In the simulation Russell pits first on lap 28, on a medium with 3 laps of use, and runs at Antonelli's real pace after his stop. What the data cannot show went in as a grid of scenarios: the pace gap between the two drivers on the same tyre (−0.05 to +0.25 s per lap), the cost of a used medium (0 to 0.10 s per lap) and the fuel-burn gain (0.03 to 0.05 s per lap).</p>
+            <p>Russell wins in 69 of the 105 scenarios. The margin depends only on the sum of driver gap and tyre penalty: up to 0.175 s per lap he wins, from 0.180 s he loses. In the central scenario he wins by 0.5 s.</p>
+            <p>The fresher tyre only pays for its own stop: Russell's simulated race time is 0.19 s quicker than his real one. What flips the result is the queue in the pit box. With Russell entering first, the 3.1 s double-stack wait falls on Antonelli, who finishes 4.19 s later than in reality, more than the 3.87 s he won by. Under the VSC, Mercedes was choosing which driver would wait.</p>
+            <p>The criterion was written before the run: reject if Russell finishes behind any car in the central scenario, accept if he wins in at least 75% of scenarios. He wins the central scenario and 66% of the grid, so the verdict is a conditional accept. I kept the 75% bar after seeing the result.</p>
           </div>
         </details>
       </div>
@@ -134,8 +136,8 @@
 
     <section class="wrap section" aria-labelledby="next">
       <div class="section-head">
-        <h2 id="next">Next steps</h2>
-        <p class="lead">Finish the tyre-degradation and traffic analyses, publish the VSC counterfactual as the first of three LinkedIn posts with a PDF report, then move to tyre degradation and corner entry and exit using the same corner-detection code.</p>
+        <h2 id="next">What came after</h2>
+        <p class="lead">The plan had two more posts, on tyre degradation and on corner entry and exit. I dropped both: public timing and telemetry cannot separate tyre degradation from fuel burn, traffic and energy management well enough to support a claim. The Monza analysis was published on LinkedIn in October 2026 and closed the project.</p>
       </div>
       <div class="hero-actions">
         <a class="btn primary" href="contact.html" data-nav>Contact me</a>

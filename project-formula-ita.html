@@ -35,14 +35,14 @@
         <div><dt>Role</dt><dd>Project Leader, Head of Powertrain</dd></div>
         <div><dt>Car</dt><dd>EITA-02 (design), EITA-01 (testing)</dd></div>
         <div><dt>Motor</dt><dd>WEG WTE300, single motor, RWD</dd></div>
-        <div><dt>Status</dt><dd>Paper draft, FEM pending</dd></div>
+        <div><dt>Status</dt><dd>Paper written, design closing</dd></div>
       </dl>
     </section>
 
     <section class="wrap section" aria-labelledby="summary">
       <div class="section-head">
         <h2 id="summary">Summary</h2>
-        <p class="lead">I chose the EITA-02 transmission layout and final drive ratio with a MATLAB lap-time simulator I wrote and calibrated against track tests on the EITA-01. The result is a countershaft layout with two chain stages, a decision to keep the 12.25 ratio, a sized shaft, key and bearings, and a test program that showed which events gearing can and cannot help.</p>
+        <p class="lead">I chose the EITA-02 transmission layout and final drive ratio with a MATLAB lap-time simulator I wrote and calibrated against track tests on the EITA-01. The result is a countershaft layout with two chain stages, a decision to keep the 12.25 ratio, a sized shaft, key and bearings, differential mounts checked by FEA, and a test program that showed which events gearing can and cannot help.</p>
       </div>
       <div class="meta">
         <div>
@@ -51,11 +51,11 @@
         </div>
         <div>
           <span class="label">Tools</span>
-          <p>MATLAB, 3DEXPERIENCE CATIA, OptimumLap, MATLAB Mobile (GPS and accelerometer), Shigley shaft design, Collins chain method, LaTeX</p>
+          <p>MATLAB, 3DEXPERIENCE CATIA, OptimumLap, MATLAB Mobile (GPS and accelerometer), Shigley shaft design, Collins chain method, 3DEXPERIENCE structural FEA, LaTeX</p>
         </div>
         <div>
           <span class="label">Outcome</span>
-          <p>Countershaft with two chain stages chosen over a planetary reducer. Ratio kept at 12.25 after a multi-event sweep. Shaft sized at Ø26.8 mm. Lap model within 9.8% of a held-out real lap.</p>
+          <p>Countershaft with two chain stages chosen over a planetary reducer. Ratio kept at 12.25 after a multi-event sweep. Shaft sized at Ø26.72 mm. Differential mounts cut from 10 to 6 mm plate at a safety factor of 2.0. Lap model within 9.8% of a held-out real lap. Written up as a paper.</p>
         </div>
       </div>
       <nav class="pillar-nav" aria-label="Project pillars">
@@ -111,9 +111,9 @@
 
       <div class="stats">
         <div class="stat"><b class="num">12.25</b><span>Final drive ratio, kept from EITA-01</span></div>
-        <div class="stat"><b class="num">Ø26.8 mm</b><span>Minimum countershaft diameter, n = 2.5</span></div>
+        <div class="stat"><b class="num">Ø26.72 mm</b><span>Minimum countershaft diameter, n = 2.5</span></div>
         <div class="stat"><b class="num">101.4°</b><span>Angle between the two chain loads, measured in CAD</span></div>
-        <div class="stat"><b class="num">9.7×</b><span>Load capacity margin of the SKF 6006 bearings</span></div>
+        <div class="stat"><b class="num">9.8×</b><span>Load capacity margin of the SKF 6006 bearings</span></div>
       </div>
 
       <figure>
@@ -125,14 +125,14 @@
         <details class="tech">
           <summary>Countershaft sizing (Shigley, ASME elliptic criterion)</summary>
           <div class="body">
-            <p>The countershaft carries the stage 1 sprocket at 61.5 mm and the stage 2 pinion at 192.5 mm from the reference bearing, with 290 mm between bearings. At design torque the chain forces are 282.8 N on the sprocket and 998.2 N on the pinion.</p>
-            <p>A first pass assumed both chains pull in one plane. The CAD coordinates showed 101.4° between the two load planes, which lowers the resultant bending moment from 70.44 N·m to 63.70 N·m.</p>
+            <p>The countershaft carries the stage 1 sprocket at 61.5 mm and the stage 2 pinion at 192.5 mm from the reference bearing, with 290 mm between bearings. With 17-tooth pinions driving 59- and 60-tooth sprockets, the chain forces at design torque are 285.2 N on the sprocket and 989.8 N on the pinion.</p>
+            <p>A first pass assumed both chains pull in one plane. The CAD coordinates showed 101.4° between the two load planes, which lowers the resultant bending moment from 69.95 N·m to 63.15 N·m.</p>
             <div class="formula">d = { (16 n / π) · [ 4 (K<sub>f</sub> M<sub>a</sub> / S<sub>e</sub>)² + 3 (K<sub>fs</sub> T<sub>m</sub> / S<sub>y</sub>)² ]<sup>1/2</sup> }<sup>1/3</sup></div>
-            <p>With a profile-milled keyseat (K<sub>f</sub> = 2.14, K<sub>fs</sub> = 3.00), SAE 4140 annealed (S<sub>ut</sub> = 655 MPa, S<sub>y</sub> = 415 MPa) and n = 2.5, the minimum diameter is Ø26.80 mm. That is 1.2 mm under the Ø28 mm shaft that already ran on EITA-01.</p>
+            <p>With a profile-milled keyseat (K<sub>f</sub> = 2.14, K<sub>fs</sub> = 3.00), SAE 4140 annealed (S<sub>ut</sub> = 655 MPa, S<sub>y</sub> = 415 MPa) and n = 2.5, the minimum diameter is Ø26.72 mm. That is 1.3 mm under the Ø28 mm shaft that already ran on EITA-01.</p>
             <ul>
-              <li>Key: 8 × 7 mm, DIN 6885, minimum length 4.41 mm, so the key is not the weak link.</li>
-              <li>Bearings: SKF 6006 (30 mm bore) on both sides to simplify assembly, about 9.7× capacity margin.</li>
-              <li>Hollow option checked: with d<sub>i</sub>/d<sub>o</sub> = 0.5 the outer diameter becomes Ø28.30 mm for about 22% less mass.</li>
+              <li>Key: 8 × 7 mm, DIN 6885, minimum length 4.38 mm, so the key is not the weak link.</li>
+              <li>Bearings: SKF 6006 (30 mm bore) on both sides to simplify assembly, about 9.8× capacity margin.</li>
+              <li>Hollow option checked: with d<sub>i</sub>/d<sub>o</sub> = 0.5 the outer diameter becomes Ø27.32 mm for about 22% less mass.</li>
               <li>Still open before manufacturing: keyseat process, the actual steel and heat treatment, and bearing data checked against the manufacturer's catalog.</li>
             </ul>
           </div>
@@ -141,7 +141,18 @@
           <summary>Chain stages and wrap angle</summary>
           <div class="body">
             <p>Chain selection follows the Collins method: design power from the motor's rated power and service factors, then the smallest ANSI chain that passes link-plate fatigue, roller and bushing fatigue, and contact wear. The software runs this search automatically.</p>
-            <p>With the centre distances locked in CAD (167.67 mm and 187.69 mm), stage 2 has a 124.9° wrap on the pinion, above the 120° practical minimum. Stage 1 sits at 117.6°, 2.4° short. Since the geometry cannot move, I accepted that margin. Harber (2005) ran 126° at a similar speed range.</p>
+            <p>With the centre distances locked in CAD (167.67 mm and 187.69 mm), stage 2 has a 124.8° wrap on the pinion, above the 120° practical minimum. Stage 1 sits at 119.2°, 0.8° short. Since the geometry cannot move, I accepted that margin. Harber (2005) ran 126° at a similar speed range.</p>
+          </div>
+        </details>
+        <details class="tech">
+          <summary>Differential mounts (FEA in 3DEXPERIENCE)</summary>
+          <div class="body">
+            <p>The differential sits on two fixed SAE 1020 plates, with a tensioning bolt pushing it along slotted holes. I checked the plates in 3DEXPERIENCE under the stage 2 chain load for acceleration and for a reverse jolt, plus the rule cases F.11.3.5.a and F.11.4.3, which I scaled by hand from the acceleration case.</p>
+            <ul>
+              <li>Acceleration governs: 104.4 MPa peak at the corner of the lower cut-out, 0.063 mm deflection, safety factor 2.0 on tabulated yield. The reverse jolt gives 2.5.</li>
+              <li>Plate thickness went from 10 mm to 6 mm, 1.83 to 1.42 kg per mount. With this geometry, 6 mm is the thinnest plate that keeps a factor of 2.0.</li>
+              <li>Why 2.0 and not 1.5: at 1.5 the plate would be about 4.4 mm, too thin for a structural part with the uncertainties still open (fixed-hole boundary, unmeasured reverse jolt, tabulated steel properties, no dedicated fatigue run).</li>
+            </ul>
           </div>
         </details>
       </div>
@@ -230,7 +241,7 @@
 
       <div class="stats">
         <div class="stat"><b class="num">80%</b><span>Drivetrain efficiency, calibrated from the Acceleration runs</span></div>
-        <div class="stat"><b class="num">≈6.8 s</b><span>Physical floor in Acceleration, against 5.739 s needed to score</span></div>
+        <div class="stat"><b class="num">≈6.5 s</b><span>Physical floor in Acceleration, against 5.739 s needed to score</span></div>
         <div class="stat"><b class="num">F182</b><span>Inverter fault that stopped the full-distance Endurance test</span></div>
         <div class="stat"><b class="num">9.8%</b><span>Model error on a held-out lap: 96.6 s simulated, 107.0 s measured</span></div>
       </div>
@@ -241,7 +252,7 @@
           <div class="body">
             <p>Five timed runs, one of them with phone telemetry. While processing it I found a bug in my launch detection: a centred moving average used future samples, so the speed step leaked backwards and the launch was flagged one or two samples early. With raw speed for that decision only, the sensor time went from 12.42 s to 11.42 s, close to the 11.86 s from the stopwatch.</p>
             <p>With a catalog drivetrain efficiency of about 90% the model gave 10.93 s, faster than the real car. At 80% it gave 11.56 s, inside the measured range and consistent with known chain slack, misalignment and bearings mounted on flexible plates.</p>
-            <p>With the calibrated model I swept the ratio from 2 to 20 and the car mass down to 60 kg (EITA-01 is about 370 kg with driver). No combination reaches 5.739 s, the time needed to score above the minimum. The floor is about 6.8 s because available traction drops with mass. That result took Acceleration out of the ratio decision and challenged the plan to chase weight for this event. As a cross-check I ran the same equations by hand for another team's four-motor AWD car.</p>
+            <p>With the calibrated model I swept the ratio from 2 to 20 and the car mass from 370 kg (EITA-01 with driver) down to 10 kg, re-optimising the ratio at each mass. No combination reaches 5.739 s, the time needed to score above the minimum. The best is about 6.5 s near 60 kg; below that, available traction drops with mass faster than inertia does. That result took Acceleration out of the ratio decision and challenged the plan to chase weight for this event. As a cross-check I ran the same equations by hand for another team's four-motor AWD car.</p>
           </div>
         </details>
         <details class="tech">
@@ -264,7 +275,7 @@
     <section class="wrap section" aria-labelledby="next">
       <div class="section-head">
         <h2 id="next">Next steps</h2>
-        <p class="lead">FEM of the differential mounts to close the paper, a dedicated SkidPad test to replace the estimated lateral grip, and a second held-out validation with a new test session.</p>
+        <p class="lead">Submit the paper to COBEM 2027 when the call opens. Before manufacturing: confirm the real shaft and plate steels, the keyseat type and the bearing catalog data. On the model side: a dedicated SkidPad test to replace the estimated lateral grip, and a second held-out validation with a new test session.</p>
       </div>
       <div class="hero-actions">
         <a class="btn primary" href="contact.html" data-nav>Contact me</a>
